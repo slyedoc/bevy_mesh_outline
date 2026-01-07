@@ -14,11 +14,6 @@ const GLTF_PATH: &str = "Fox.glb";
 
 fn main() {
     App::new()
-        .insert_resource(AmbientLight {
-            color: Color::WHITE,
-            brightness: 2000.,
-            ..default()
-        })
         .add_plugins(DefaultPlugins)
         .add_plugins(MeshOutlinePlugin)
         .add_systems(Startup, setup_fox)
@@ -107,6 +102,11 @@ fn setup_camera_and_environment(
         Transform::from_xyz(100.0, 100.0, 150.0).looking_at(Vec3::new(0.0, 20.0, 0.0), Vec3::Y),
         OutlineCamera,
         DepthPrepass,
+        AmbientLight {
+            color: Color::WHITE,
+            brightness: 2000.,
+            ..default()
+        },
         Msaa::Off,
     ));
 

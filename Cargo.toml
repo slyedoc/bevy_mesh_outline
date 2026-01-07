@@ -38,3 +38,7 @@ path = "examples/intersecting.rs"
 [[example]]
 name = "animated_mesh"
 path = "examples/animated_mesh.rs"
+
+# Remove expensive debug assertions due to <https://github.com/bevyengine/bevy/issues/14291>
+[profile.dev.package.wgpu-types]
+debug-assertions = false

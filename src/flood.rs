@@ -28,6 +28,9 @@ use super::{ExtractedOutline, OutlineCamera};
 #[derive(ShaderType)]
 pub struct JumpFloodUniform {
     pub step_length: u32,
+    pub _pad1: u32,
+    pub _pad2: u32,
+    pub _pad3: u32,
 }
 
 #[derive(Component, Default, Clone)]
@@ -118,6 +121,9 @@ impl FromWorld for JumpFloodPipeline {
         for bit in 0..32 {
             offsets.push(uniform_buffer.push(&JumpFloodUniform {
                 step_length: 1 << bit,
+                _pad1: 0,
+                _pad2: 0,
+                _pad3: 0,
             }));
         }
         uniform_buffer.write_buffer(&render_device, render_queue);
