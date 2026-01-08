@@ -1,7 +1,7 @@
 use bevy::{
     core_pipeline::prepass::NormalPrepass,
     ecs::change_detection::Tick,
-    pbr::{MeshPipelineKey, RenderMeshInstances},
+    pbr::{ExtractedAtmosphere, MeshPipelineKey, RenderMeshInstances},
     prelude::*,
 };
 use bevy_render::{
@@ -37,6 +37,7 @@ pub fn queue_outline(
             &RenderVisibleEntities,
             &Msaa,
             Has<NormalPrepass>,
+            Has<ExtractedAtmosphere>,
         ),
         With<OutlineCamera>,
     >,
@@ -44,7 +45,7 @@ pub fn queue_outline(
 ) {
     let draw_function = draw_functions.read().id::<DrawOutline>();
 
-    for (_view_entity, view, visible_entities, msaa, has_normal_prepass) in views.iter() {
+    for (_view_entity, view, visible_entities, msaa, has_normal_prepass, has_atmosphere) in views.iter() {
         let Some(outline_phase) = outline_phases.get_mut(&view.retained_view_entity) else {
             continue;
         };
@@ -55,6 +56,10 @@ pub fn queue_outline(
 
         if has_normal_prepass {
             view_key |= MeshPipelineKey::NORMAL_PREPASS;
+        }
+
+        if has_atmosphere {
+            view_key |= MeshPipelineKey::ATMOSPHERE;
         }
 
         for &(render_entity, main_entity) in visible_entities.get::<Mesh3d>().iter() {
