@@ -4,11 +4,11 @@ use bevy_render::{
     render_phase::ViewBinnedRenderPhases, view::RetainedViewEntity,
 };
 
-use super::mask::MeshOutline3d;
+use super::{OutlineCamera, mask::MeshOutline3d};
 
 pub(crate) fn update_views(
     mut outline_phases: ResMut<ViewBinnedRenderPhases<MeshOutline3d>>,
-    query: Extract<Query<(Entity, &Camera), With<Camera3d>>>,
+    query: Extract<Query<(Entity, &Camera), (With<Camera3d>, With<OutlineCamera>)>>,
     mut live_entities: Local<HashSet<RetainedViewEntity>>,
 ) {
     live_entities.clear();

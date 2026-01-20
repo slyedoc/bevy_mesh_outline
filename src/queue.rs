@@ -1,5 +1,5 @@
 use bevy::{
-    core_pipeline::prepass::NormalPrepass,
+    core_pipeline::prepass::ViewPrepassTextures,
     ecs::change_detection::Tick,
     pbr::{ExtractedAtmosphere, MeshPipelineKey, RenderMeshInstances},
     prelude::*,
@@ -36,7 +36,7 @@ pub fn queue_outline(
             &ExtractedView,
             &RenderVisibleEntities,
             &Msaa,
-            Has<NormalPrepass>,
+            Option<&ViewPrepassTextures>,
             Has<ExtractedAtmosphere>,
         ),
         With<OutlineCamera>,
@@ -45,17 +45,28 @@ pub fn queue_outline(
 ) {
     let draw_function = draw_functions.read().id::<DrawOutline>();
 
-    for (_view_entity, view, visible_entities, msaa, has_normal_prepass, has_atmosphere) in views.iter() {
+    for (_view_entity, view, visible_entities, msaa, prepass_textures, has_atmosphere) in views.iter() {
         let Some(outline_phase) = outline_phases.get_mut(&view.retained_view_entity) else {
             continue;
         };
 
         let mut view_key = MeshPipelineKey::from_msaa_samples(msaa.samples())
-            | MeshPipelineKey::DEPTH_PREPASS
             | MeshPipelineKey::from_hdr(view.hdr);
 
-        if has_normal_prepass {
-            view_key |= MeshPipelineKey::NORMAL_PREPASS;
+        // Build view key from prepass textures (handles depth, normal, motion, deferred)
+        if let Some(prepass) = prepass_textures {
+            if prepass.depth.is_some() {
+                view_key |= MeshPipelineKey::DEPTH_PREPASS;
+            }
+            if prepass.normal.is_some() {
+                view_key |= MeshPipelineKey::NORMAL_PREPASS;
+            }
+            if prepass.motion_vectors.is_some() {
+                view_key |= MeshPipelineKey::MOTION_VECTOR_PREPASS;
+            }
+            if prepass.deferred.is_some() {
+                view_key |= MeshPipelineKey::DEFERRED_PREPASS;
+            }
         }
 
         if has_atmosphere {
