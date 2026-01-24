@@ -119,6 +119,7 @@ impl ViewNode for MeshOutlineNode {
                 }),
                 timestamp_writes: None,
                 occlusion_query_set: None,
+                multiview_mask: None,
             });
 
             if let Some(viewport) = camera.viewport.as_ref() {
@@ -204,6 +205,7 @@ impl ViewNode for MeshOutlineNode {
                 depth_stencil_attachment: None,
                 timestamp_writes: None,
                 occlusion_query_set: None,
+                multiview_mask: None,
             });
 
             render_pass.set_render_pipeline(pipeline);
