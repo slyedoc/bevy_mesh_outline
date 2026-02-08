@@ -140,8 +140,8 @@ impl FromWorld for JumpFloodPipeline {
 
 pub struct JumpFloodPass<'w> {
     pub pipeline: &'w JumpFloodPipeline,
-    render_pipeline: &'w RenderPipeline,
-    pipeline_cache: &'w PipelineCache,
+    pub(crate) render_pipeline: &'w RenderPipeline,
+    pub(crate) pipeline_cache: &'w PipelineCache,
 }
 
 impl<'w> JumpFloodPass<'w> {
@@ -160,7 +160,7 @@ impl<'w> JumpFloodPass<'w> {
     #[allow(clippy::too_many_arguments)]
     pub fn execute(
         &mut self,
-        render_context: &mut RenderContext<'_>,
+        render_context: &mut RenderContext,
         input: &CachedTexture,
         output: &CachedTexture,
         depth_texture: &TextureView,

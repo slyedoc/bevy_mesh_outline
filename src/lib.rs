@@ -11,8 +11,8 @@ mod uniforms;
 mod view;
 
 use bevy::{
-    core_pipeline::core_3d::graph::{Core3d, Node3d},
-    math::Affine3,
+    core_pipeline::{Core3d, Core3dSystems},
+    math::{Affine3, Affine3Ext},
     pbr::{
         DrawMesh, SetMeshBindGroup, SetMeshViewBindGroup, SetMeshViewBindingArrayBindGroup,
         extract_skins,
@@ -23,19 +23,19 @@ use bevy_render::{
     Render, RenderApp, RenderDebugFlags, RenderSystems,
     batching::gpu_preprocessing::batch_and_prepare_binned_render_phase,
     extract_component::{ExtractComponent, ExtractComponentPlugin},
-    render_graph::{RenderGraphExt, RenderLabel, ViewNodeRunner},
     render_phase::{
         AddRenderCommand, BinnedRenderPhasePlugin, DrawFunctions, SetItemPipeline,
         ViewBinnedRenderPhases,
     },
     render_resource::SpecializedMeshPipelines,
+    sync_component::SyncComponent,
     sync_world::{MainEntity, MainEntityHashMap},
 };
 use compose::ComposeOutputPipeline;
 use flood::{JumpFloodPipeline, prepare_flood_settings};
 use mask::MeshOutline3d;
 use mask_pipeline::MeshMaskPipeline;
-use node::MeshOutlineNode;
+use node::mesh_outline_pass;
 use queue::queue_outline;
 use render::{OutlineBindGroups, SetOutlineBindGroup, prepare_outline_bind_groups};
 use texture::prepare_flood_textures;
@@ -95,17 +95,11 @@ impl Plugin for MeshOutlinePlugin {
                 ),
             )
             .add_render_command::<MeshOutline3d, DrawOutline>()
-            .add_render_graph_node::<ViewNodeRunner<MeshOutlineNode>>(
+            .add_systems(
                 Core3d,
-                OutlineNode::MeshOutlineNode,
-            )
-            .add_render_graph_edges(
-                Core3d,
-                (
-                    Node3d::EndMainPass,
-                    OutlineNode::MeshOutlineNode,
-                    Node3d::Bloom,
-                ),
+                mesh_outline_pass
+                    .after(Core3dSystems::MainPass)
+                    .before(Core3dSystems::PostProcess),
             );
     }
 
@@ -168,22 +162,26 @@ pub struct ExtractedOutline {
     pub world_from_local: [Vec4; 3],
 }
 
+impl SyncComponent for MeshOutline {
+    type Out = ExtractedOutline;
+}
+
 impl ExtractComponent for MeshOutline {
     type QueryData = (Entity, &'static MeshOutline, &'static GlobalTransform);
 
     type QueryFilter = With<Mesh3d>;
-    type Out = ExtractedOutline;
 
     fn extract_component(
         (_entity, outline, transform): bevy::ecs::query::QueryItem<'_, '_, Self::QueryData>,
     ) -> Option<Self::Out> {
         let linear_color: LinearRgba = outline.color.into();
+        let world_from_local: Affine3 = transform.affine().into();
         Some(ExtractedOutline {
             intensity: outline.intensity,
             width: outline.width,
             priority: outline.priority,
             color: linear_color.to_vec4(),
-            world_from_local: Affine3::from(&transform.affine()).to_transpose(),
+            world_from_local: world_from_local.to_transpose(),
         })
     }
 }
@@ -200,9 +198,4 @@ fn extract_outlines_to_resource(
     for (main_entity, outline) in outlines.iter() {
         extracted_outlines.0.insert(*main_entity, outline.clone());
     }
-}
-
-#[derive(Copy, Clone, Debug, RenderLabel, Hash, PartialEq, Eq)]
-pub enum OutlineNode {
-    MeshOutlineNode,
 }
