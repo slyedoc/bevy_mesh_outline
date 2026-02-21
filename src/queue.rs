@@ -1,6 +1,5 @@
 use bevy::{
     core_pipeline::prepass::ViewPrepassTextures,
-    ecs::change_detection::Tick,
     pbr::{ExtractedAtmosphere, MeshPipelineKey, RenderMeshInstances},
     prelude::*,
 };
@@ -41,7 +40,6 @@ pub fn queue_outline(
         ),
         With<OutlineCamera>,
     >,
-    mut change_tick: Local<Tick>,
 ) {
     let draw_function = draw_functions.read().id::<DrawOutline>();
 
@@ -73,7 +71,11 @@ pub fn queue_outline(
             view_key |= MeshPipelineKey::ATMOSPHERE;
         }
 
-        for &(render_entity, main_entity) in visible_entities.get::<Mesh3d>().iter() {
+        let Some(render_visible_mesh_entities) = visible_entities.get::<Mesh3d>() else {
+            continue;
+        };
+
+        for &(render_entity, main_entity) in &render_visible_mesh_entities.entities {
             if outlined_meshes.get(render_entity).is_err() {
                 continue;
             }
@@ -104,9 +106,6 @@ pub fn queue_outline(
                 continue;
             };
 
-            let next_change_tick = change_tick.get() + 1;
-            change_tick.set(next_change_tick);
-
             outline_phase.add(
                 OutlineBatchSetKey {
                     pipeline: pipeline_id,
@@ -120,7 +119,6 @@ pub fn queue_outline(
                 (render_entity, main_entity),
                 mesh_instance.current_uniform_index,
                 BinnedRenderPhaseType::UnbatchableMesh,
-                *change_tick,
             );
         }
     }
