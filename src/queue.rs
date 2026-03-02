@@ -85,9 +85,11 @@ pub fn queue_outline(
                 continue;
             };
 
-            let (vertex_slab, index_slab) = mesh_allocator.mesh_slabs(&mesh_instance.mesh_asset_id);
+            let Some(mesh_slabs) = mesh_allocator.mesh_slabs(&mesh_instance.mesh_asset_id()) else {
+                continue;
+            };
 
-            let Some(mesh) = render_meshes.get(mesh_instance.mesh_asset_id) else {
+            let Some(mesh) = render_meshes.get(mesh_instance.mesh_asset_id()) else {
                 tracing::warn!(target: "bevy_mesh_outline", "No mesh found for entity {:?}", main_entity);
                 continue;
             };
@@ -110,11 +112,11 @@ pub fn queue_outline(
                 OutlineBatchSetKey {
                     pipeline: pipeline_id,
                     draw_function,
-                    vertex_slab: vertex_slab.unwrap_or_default(),
-                    index_slab,
+                    vertex_slab: mesh_slabs.vertex_slab_id,
+                    index_slab: mesh_slabs.index_slab_id,
                 },
                 OutlineBinKey {
-                    asset_id: mesh_instance.mesh_asset_id.untyped(),
+                    asset_id: mesh_instance.mesh_asset_id().untyped(),
                 },
                 (render_entity, main_entity),
                 mesh_instance.current_uniform_index,

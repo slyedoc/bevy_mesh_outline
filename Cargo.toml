@@ -13,8 +13,8 @@ exclude = [".github/", "assets/"]
 readme = "README.md"
 
 [dependencies]
-bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = false, features = ["bevy_pbr", "bevy_log", "webgpu"] }
-bevy_render = { git = "https://github.com/bevyengine/bevy", branch = "main" }
+bevy = { git = "https://github.com/slyedoc/bevy", branch = "bsn", default-features = false, features = ["bevy_pbr", "bevy_log", "webgpu"] }
+bevy_render = { git = "https://github.com/slyedoc/bevy", branch = "bsn" }
 rand = "0.9"
 tracing = "0.1"
 wgpu-types = "28"

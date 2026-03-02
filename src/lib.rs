@@ -14,13 +14,13 @@ use bevy::{
     core_pipeline::{Core3d, Core3dSystems},
     math::{Affine3, Affine3Ext},
     pbr::{
-        DrawMesh, SetMeshBindGroup, SetMeshViewBindGroup, SetMeshViewBindingArrayBindGroup,
-        extract_skins,
+        DrawMesh, MeshPipelineSet, SetMeshBindGroup, SetMeshViewBindGroup,
+        SetMeshViewBindingArrayBindGroup, extract_skins,
     },
     prelude::*,
 };
 use bevy_render::{
-    Render, RenderApp, RenderDebugFlags, RenderSystems,
+    Render, RenderApp, RenderDebugFlags, RenderStartup, RenderSystems,
     batching::gpu_preprocessing::batch_and_prepare_binned_render_phase,
     extract_component::{ExtractComponent, ExtractComponentPlugin},
     render_phase::{
@@ -34,7 +34,7 @@ use bevy_render::{
 use compose::ComposeOutputPipeline;
 use flood::{JumpFloodPipeline, prepare_flood_settings};
 use mask::MeshOutline3d;
-use mask_pipeline::MeshMaskPipeline;
+use mask_pipeline::{MeshMaskPipeline, init_mesh_mask_pipeline};
 use node::mesh_outline_pass;
 use queue::queue_outline;
 use render::{OutlineBindGroups, SetOutlineBindGroup, prepare_outline_bind_groups};
@@ -108,7 +108,10 @@ impl Plugin for MeshOutlinePlugin {
             return;
         };
         render_app
-            .init_resource::<MeshMaskPipeline>()
+            .add_systems(
+                RenderStartup,
+                init_mesh_mask_pipeline.after(MeshPipelineSet),
+            )
             .init_resource::<JumpFloodPipeline>()
             .init_resource::<ComposeOutputPipeline>();
     }
