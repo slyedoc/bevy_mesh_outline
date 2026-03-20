@@ -107,14 +107,15 @@ impl GetBatchData for MeshMaskPipeline {
         SRes<SkinUniforms>,
         SRes<ExtractedOutlines>,
     );
-    type CompareData = (AssetId<Mesh>, ExtractedOutline);
+    type BatchCompareData = ExtractedOutline;
+    type BatchSetCompareData = AssetId<Mesh>;
 
     type BufferData = MeshUniform;
 
     fn get_batch_data(
         (mesh_instances, _, mesh_allocator, skin_uniforms, outlines): &SystemParamItem<Self::Param>,
         (_entity, main_entity): (Entity, MainEntity),
-    ) -> Option<(Self::BufferData, Option<Self::CompareData>)> {
+    ) -> Option<(Self::BufferData, Option<(Self::BatchSetCompareData, Self::BatchCompareData)>)> {
         tracing::info!("get_batch_data for outline pipeline");
         let RenderMeshInstances::CpuBuilding(ref mesh_instances) = **mesh_instances else {
             tracing::error!(
@@ -155,7 +156,7 @@ impl GetFullBatchData for MeshMaskPipeline {
     fn get_index_and_compare_data(
         (mesh_instances, _, _, _, outlines): &SystemParamItem<Self::Param>,
         main_entity: MainEntity,
-    ) -> Option<(NonMaxU32, Option<Self::CompareData>)> {
+    ) -> Option<(NonMaxU32, Option<(Self::BatchSetCompareData, Self::BatchCompareData)>)> {
         // This should only be called during GPU building.
         let RenderMeshInstances::GpuBuilding(ref mesh_instances) = **mesh_instances else {
             tracing::error!(
