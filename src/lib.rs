@@ -98,7 +98,7 @@ impl Plugin for MeshOutlinePlugin {
             .add_systems(
                 Core3d,
                 mesh_outline_pass
-                    .after(Core3dSystems::MainPass)
+                    .after(Core3dSystems::EarlyPostProcess)
                     .before(Core3dSystems::PostProcess),
             );
     }
