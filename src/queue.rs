@@ -75,7 +75,7 @@ pub fn queue_outline(
             continue;
         };
 
-        for &(render_entity, main_entity) in &render_visible_mesh_entities.entities {
+        for &(render_entity, main_entity) in &render_visible_mesh_entities.entities_cpu_culling {
             if outlined_meshes.get(render_entity).is_err() {
                 continue;
             }
