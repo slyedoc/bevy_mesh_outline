@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use bevy::{asset::UntypedAssetId, prelude::*};
 use bevy_render::{
-    mesh::allocator::SlabId,
+    mesh::allocator::MeshSlabId,
     render_phase::{
         BinnedPhaseItem, CachedRenderPipelinePhaseItem, DrawFunctionId, PhaseItem,
         PhaseItemBatchSetKey, PhaseItemExtraIndex,
@@ -15,8 +15,8 @@ use bevy_render::{
 pub(crate) struct OutlineBatchSetKey {
     pub pipeline: CachedRenderPipelineId,
     pub draw_function: DrawFunctionId,
-    pub vertex_slab: SlabId,
-    pub index_slab: Option<SlabId>,
+    pub vertex_slab: MeshSlabId,
+    pub index_slab: Option<MeshSlabId>,
 }
 
 impl PhaseItemBatchSetKey for OutlineBatchSetKey {

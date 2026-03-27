@@ -95,7 +95,7 @@ pub fn queue_outline(
             };
 
             let mut mesh_key = view_key;
-            mesh_key |= MeshPipelineKey::from_primitive_topology(mesh.primitive_topology())
+            mesh_key |= MeshPipelineKey::from_primitive_topology_and_strip_index(mesh.primitive_topology(), mesh.index_format())
                 | MeshPipelineKey::from_bits_retain(mesh.key_bits.bits());
 
             let Ok(pipeline_id) = mesh_outline_pipelines.specialize(
