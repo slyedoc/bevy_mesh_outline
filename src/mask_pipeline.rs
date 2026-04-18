@@ -8,7 +8,7 @@ use bevy::{
     },
     prelude::*,
 };
-use bevy_render::{
+use bevy::render::{
     batching::{
         GetBatchData, GetFullBatchData,
         gpu_preprocessing::{IndirectParametersCpuMetadata, UntypedPhaseIndirectParametersBuffers},

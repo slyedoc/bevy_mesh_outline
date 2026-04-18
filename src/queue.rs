@@ -3,7 +3,7 @@ use bevy::{
     pbr::{ExtractedAtmosphere, MeshPipelineKey, RenderMeshInstances},
     prelude::*,
 };
-use bevy_render::{
+use bevy::render::{
     mesh::{RenderMesh, allocator::MeshAllocator},
     render_asset::RenderAssets,
     render_phase::{BinnedRenderPhaseType, DrawFunctions, ViewBinnedRenderPhases},

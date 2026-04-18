@@ -6,7 +6,7 @@ use bevy::{
     platform::collections::HashMap,
     prelude::*,
 };
-use bevy_render::{
+use bevy::render::{
     render_phase::{PhaseItem, RenderCommand, RenderCommandResult, TrackedRenderPass},
     render_resource::{BindGroup, BindGroupEntry, BufferInitDescriptor, PipelineCache},
     renderer::RenderDevice,

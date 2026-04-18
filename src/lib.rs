@@ -19,7 +19,7 @@ use bevy::{
     },
     prelude::*,
 };
-use bevy_render::{
+use bevy::render::{
     Render, RenderApp, RenderDebugFlags, RenderStartup, RenderSystems,
     batching::gpu_preprocessing::batch_and_prepare_binned_render_phase,
     extract_component::{ExtractComponent, ExtractComponentPlugin},

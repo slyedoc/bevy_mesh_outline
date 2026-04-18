@@ -2,7 +2,7 @@
 
 use bevy::prelude::*;
 use bevy::render::render_resource::ShaderType;
-use bevy_render::render_resource::AsBindGroup;
+use bevy::render::render_resource::AsBindGroup;
 use bytemuck::{Pod, Zeroable};
 
 use super::ExtractedOutline;

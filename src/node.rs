@@ -1,5 +1,5 @@
 use bevy::{core_pipeline::prepass::ViewPrepassTextures, prelude::*};
-use bevy_render::{
+use bevy::render::{
     camera::ExtractedCamera,
     render_phase::ViewBinnedRenderPhases,
     render_resource::{

@@ -10,7 +10,7 @@ use bevy::{
         renderer::RenderDevice,
     },
 };
-use bevy_render::render_resource::binding_types::texture_depth_2d;
+use bevy::render::render_resource::binding_types::texture_depth_2d;
 use wgpu_types::{
     ColorTargetState, ColorWrites, MultisampleState, PrimitiveState, SamplerBindingType,
     ShaderStages, TextureFormat, TextureSampleType,

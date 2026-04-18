@@ -1,5 +1,5 @@
 use bevy::{core_pipeline::core_3d::CORE_3D_DEPTH_FORMAT, prelude::*};
-use bevy_render::{
+use bevy::render::{
     camera::ExtractedCamera,
     render_resource::{Texture, TextureDescriptor},
     renderer::RenderDevice,

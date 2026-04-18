@@ -1,7 +1,7 @@
 use std::ops::Range;
 
 use bevy::{asset::UntypedAssetId, prelude::*};
-use bevy_render::{
+use bevy::render::{
     mesh::allocator::MeshSlabId,
     render_phase::{
         BinnedPhaseItem, CachedRenderPipelinePhaseItem, DrawFunctionId, PhaseItem,

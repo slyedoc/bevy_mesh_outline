@@ -1,5 +1,5 @@
 use bevy::{platform::collections::HashSet, prelude::*};
-use bevy_render::{
+use bevy::render::{
     Extract, batching::gpu_preprocessing::GpuPreprocessingMode,
     render_phase::ViewBinnedRenderPhases, view::RetainedViewEntity,
 };
