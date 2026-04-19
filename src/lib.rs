@@ -166,13 +166,14 @@ pub struct ExtractedOutline {
 }
 
 impl SyncComponent for MeshOutline {
-    type Out = ExtractedOutline;
+    type Target = ExtractedOutline;
 }
 
 impl ExtractComponent for MeshOutline {
     type QueryData = (Entity, &'static MeshOutline, &'static GlobalTransform);
 
     type QueryFilter = With<Mesh3d>;
+    type Out = ExtractedOutline;
 
     fn extract_component(
         (_entity, outline, transform): bevy::ecs::query::QueryItem<'_, '_, Self::QueryData>,

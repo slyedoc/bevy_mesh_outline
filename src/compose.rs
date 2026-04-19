@@ -45,7 +45,7 @@ impl FromWorld for ComposeOutputPipeline {
         );
 
         let target = Some(ColorTargetState {
-            format: TextureFormat::bevy_default(),
+            format: TextureFormat::Rgba8UnormSrgb,
             blend: None,
             write_mask: ColorWrites::ALL,
         });

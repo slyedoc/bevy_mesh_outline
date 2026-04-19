@@ -136,7 +136,7 @@ pub fn mesh_outline_pass(
         return;
     };
 
-    let pipeline_id = if view_target.is_hdr() {
+    let pipeline_id = if view_target.main_texture_format() == bevy::render::view::ViewTarget::TEXTURE_FORMAT_HDR {
         compose_pipeline.hdr_pipeline_id
     } else {
         compose_pipeline.pipeline_id

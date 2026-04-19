@@ -48,8 +48,7 @@ pub fn queue_outline(
             continue;
         };
 
-        let mut view_key = MeshPipelineKey::from_msaa_samples(msaa.samples())
-            | MeshPipelineKey::from_hdr(view.hdr);
+        let mut view_key = MeshPipelineKey::from_msaa_samples(msaa.samples());
 
         // Build view key from prepass textures (handles depth, normal, motion, deferred)
         if let Some(prepass) = prepass_textures {
